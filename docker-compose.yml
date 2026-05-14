@@ -2,7 +2,6 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: dashboard
@@ -14,20 +13,16 @@ services:
       - "5432:5432"
 
   backend:
-    build: ./backend
-    container_name: dashboard-api
-    restart: unless-stopped
+    build: 
+      context: ./backend/dashboard-api
     depends_on:
       - postgres
-    environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=dashboard;Username=dashboard;Password=postgres
     ports:
       - "5000:8080"
 
   frontend:
-    build: ./frontend
-    container_name: dashboard-ui
-    restart: unless-stopped
+    build: 
+      context: ./frontend/dashboard-client
     ports:
       - "80:80"
 

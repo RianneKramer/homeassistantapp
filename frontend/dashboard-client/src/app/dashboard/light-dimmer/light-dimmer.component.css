@@ -1,0 +1,27 @@
+div.dimmer {
+  background-color: pink;
+  display: grid;
+  grid-template-columns: 3fr 3fr;
+  gap: 1rem;
+}
+
+div.slider {
+  background-color: gray;
+  padding: 1rem;
+}
+
+datalist {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200px;
+}
+
+option {
+  padding: 0;
+}
+
+input[type="range"] {
+  width: 200px;
+  margin: 0;
+}

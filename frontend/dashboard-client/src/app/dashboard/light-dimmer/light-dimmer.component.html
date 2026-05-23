@@ -1,0 +1,25 @@
+<div class="dimmer">
+  <h3>{{ light.name }}</h3>
+
+  <div class="slider">
+    <input
+      type="range"
+      min="0"
+      max="100"
+      step="10"
+      list="markers"
+      [(ngModel)]="light.brightness"
+    />
+  </div>
+
+  <datalist id="markers">
+    <option value="0" label="0"></option>
+    <option value="50"></option>
+    <option value="100"></option>
+  </datalist>
+
+  <button (click)="toggleLight()">
+    {{ light.isOn ? 'Uit' : 'Aan' }}
+  </button>
+
+</div>

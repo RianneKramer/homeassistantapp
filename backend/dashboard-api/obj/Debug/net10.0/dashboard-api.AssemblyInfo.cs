@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dashboard-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee443e72f7a04b926cd705f595a5c52ca2bffdc4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0324b65e15dbe4c856ddcb03f77572530f093cc")]
 [assembly: System.Reflection.AssemblyProductAttribute("dashboard-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dashboard-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

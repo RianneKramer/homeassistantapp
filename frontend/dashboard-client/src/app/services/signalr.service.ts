@@ -9,12 +9,18 @@ export class SignalRService {
 
   startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5001/lightHub')
+      .withUrl('http://localhost:5001/hub')
       .withAutomaticReconnect()
       .build();
+
+    this.registerListeners()
+
+    return this.hubConnection.start();
   }
 
-  registerLightUpdates(callback: (data: any) => void) {
-    this.hubConnection.on('LightUpdated', callback);
+  registerListeners() {
+    this.hubConnection.on('LightUpdated', (light) => {
+      console.log(light);
+    })
   }
 }

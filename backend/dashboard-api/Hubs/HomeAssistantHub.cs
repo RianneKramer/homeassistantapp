@@ -2,7 +2,7 @@
 
 namespace dashboard_api.Hubs;
 
-public class LightHub : Hub
+public class HomeAssistantHub : Hub
 {
     
 }

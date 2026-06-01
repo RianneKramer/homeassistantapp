@@ -2,18 +2,11 @@
 
 namespace dashboard_api.BackgroundServices;
 
-public class HomeAssistantListener : BackgroundService
+public class HomeAssistantListener(IServiceProvider serviceProvider) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    
-    public HomeAssistantListener(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
         var websocketService = scope
             .ServiceProvider

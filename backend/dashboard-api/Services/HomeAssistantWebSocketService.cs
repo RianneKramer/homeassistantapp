@@ -1,24 +1,18 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using dashboard_api.Dtos;
+using dashboard_api.Models;
 
 namespace dashboard_api.Services;
 
-public class HomeAssistantWebSocketService
+public class HomeAssistantWebSocketService(IConfiguration configuration, LightStateService lightStateService)
 {
-    private readonly IConfiguration _configuration;
-    private readonly LightStateService _lightStateService;
-
-    public HomeAssistantWebSocketService(IConfiguration configuration, LightStateService lightStateService)
-    {
-        _configuration = configuration;
-        _lightStateService = lightStateService;
-    }
 
     public async Task StartListening()
     {
-        var websocketUrl = _configuration["HomeAssistant:WebSocket"];
-        var token = _configuration["HomeAssistant:Token"];
+        var websocketUrl = configuration["HomeAssistant:WebSocket"];
+        var token = configuration["HomeAssistant:Token"];
 
         using var socket = new ClientWebSocket();
         
@@ -70,8 +64,51 @@ public class HomeAssistantWebSocketService
             CancellationToken.None);
     }
 
-    private void HandleMessage(string json)
+    private async void HandleMessage(string json)
     {
-        Console.WriteLine(json);
+        var entity = JsonSerializer.Deserialize<HomeAssistantMessage>(json);
+
+        var domain = entity?.Event?.Data?.EntityId.Split('.')[0];
+
+        switch (domain)
+        {
+            case "light":
+                Console.WriteLine("Light Event");
+                await lightStateService.SyncLight(
+                [
+                    new EntityDto
+                    {
+                        EntityId = entity!.Event!.Data!.NewState!.EntityId,
+                        State = entity.Event.Data.NewState.State,
+                        Attributes = entity.Event.Data.NewState.Attributes
+                    }
+                ]);
+                
+                break;
+            case "sun":
+                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
+                foreach (var attribute in entity.Event.Data.NewState.Attributes)
+                {
+                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
+                }
+                break;
+            case "weather":
+                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
+                foreach (var attribute in entity.Event.Data.NewState.Attributes)
+                {
+                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
+                }
+                break;
+            case "sensor":
+                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
+                foreach (var attribute in entity.Event.Data.NewState.Attributes)
+                {
+                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
+                }
+                break;
+            default:
+                Console.WriteLine(json);
+                break;
+        }
     }
 }

@@ -1,6 +1,11 @@
+using System.Net.Http.Headers;
+using dashboard_api;
 using dashboard_api.BackgroundServices;
+using dashboard_api.Data;
 using dashboard_api.Hubs;
 using dashboard_api.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,25 +15,51 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddSignalR();
+builder.Services.AddDbContext<SmartHomeDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"))
+    );
+
+builder.Services.AddScoped<HomeAssistantRestService>();
 
 builder.Services.AddSingleton<SignalRBroadcastService>();
-builder.Services.AddSingleton<LightStateService>();
-builder.Services.AddSingleton<HomeAssistantWebSocketService>();
+builder.Services.AddScoped<LightStateService>();
+builder.Services.AddScoped<HomeAssistantWebSocketService>();
+builder.Services.AddScoped<HomeAssistantHub>();
 
 builder.Services.AddHostedService<HomeAssistantListener>();
 
-builder.Services.AddHttpClient<HomeAssistantRestService>(client =>
+builder.Services.AddHttpClient<HomeAssistantRestService>((sp, client) =>
 {
-    client.BaseAddress = new Uri("http://homeassistant.local:8123");
-
-    client.DefaultRequestHeaders.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3Zjc0NDZhM2EzNDc0Y2U3YTIyMWE2ZjBhODZlMWExNiIsImlhdCI6MTc3OTU0Mjc2NiwiZXhwIjoyMDk0OTAyNzY2fQ.eTtKMviZcwDHfxSNluZaXi-tStKvmZIIHhbu8of-eJE");
+    var config = sp.GetRequiredService<IConfiguration>();
+    client.BaseAddress = new Uri(config["HomeAssistant:Url"]!);
+    client.DefaultRequestHeaders.Authorization = 
+        new AuthenticationHeaderValue("Bearer", config["HomeAssistant:Token"]);
 });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var syncServices = scope.ServiceProvider.GetRequiredService<HomeAssistantRestService>();
+    await syncServices.SyncCurrentStates();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -38,7 +69,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapHub<LightHub>("/lightHub");
+app.UseCors("AllowLocalhost");
+
+app.MapHub<HomeAssistantHub>("/hub");
 
 app.UseHttpsRedirection();
 

@@ -2,11 +2,12 @@
 using System.Text;
 using System.Text.Json;
 using dashboard_api.Dtos;
+using dashboard_api.Interfaces;
 using dashboard_api.Models;
 
 namespace dashboard_api.Services;
 
-public class HomeAssistantWebSocketService(IConfiguration configuration, EntitySyncService syncService)
+public class HomeAssistantWebSocketService(IConfiguration configuration, IEntitySyncService syncService)
 {
 
     public async Task StartListening()

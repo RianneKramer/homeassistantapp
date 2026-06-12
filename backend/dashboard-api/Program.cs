@@ -33,6 +33,7 @@ builder.Services.AddScoped<DeviceControllerService>();
 builder.Services.AddScoped<IDeviceDomainHandler, LightHandler>();
 
 builder.Services.AddScoped<SceneMapper>();
+builder.Services.AddScoped<EntityMapper>();
 
 builder.Services.AddScoped<ISceneManagementService, SceneManagementService>();
 builder.Services.AddScoped<ISceneValidationService, SceneValidationService>();

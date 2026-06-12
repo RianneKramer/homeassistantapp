@@ -14,7 +14,19 @@ public class EntityMapper
             State = entity.State,
             Attributes = string.IsNullOrWhiteSpace(entity.AttributeJson)
                 ? null
-                : JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(entity.AttributeJson)
+                : TryDeserialize(entity.AttributeJson)
         };
+    }
+
+    private Dictionary<string, JsonElement>? TryDeserialize(string json)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

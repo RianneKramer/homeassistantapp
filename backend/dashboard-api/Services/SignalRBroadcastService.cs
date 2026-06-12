@@ -1,5 +1,4 @@
-﻿using dashboard_api.Dtos;
-using dashboard_api.Hubs;
+﻿using dashboard_api.Hubs;
 using dashboard_api.Models;
 using Microsoft.AspNetCore.SignalR;
 

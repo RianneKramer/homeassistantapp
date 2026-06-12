@@ -27,7 +27,7 @@ builder.Services.AddScoped<HomeAssistantRestService>();
 builder.Services.AddSingleton<SignalRBroadcastService>();
 builder.Services.AddScoped<HomeAssistantWebSocketService>();
 builder.Services.AddScoped<HomeAssistantHub>();
-builder.Services.AddScoped<EntitySyncService>();
+builder.Services.AddScoped<IEntitySyncService, EntitySyncService>();
 builder.Services.AddScoped<DeviceControllerService>();
 
 builder.Services.AddScoped<IDeviceDomainHandler, LightHandler>();

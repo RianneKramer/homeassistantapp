@@ -1,12 +1,14 @@
 ﻿using System.Text.Json;
 using dashboard_api.Data;
 using dashboard_api.Dtos;
+using dashboard_api.Interfaces;
+using dashboard_api.Mappers;
 using dashboard_api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace dashboard_api.Services;
 
-public class EntitySyncService(SmartHomeDbContext context, SignalRBroadcastService broadcastService)
+public class EntitySyncService(SmartHomeDbContext context, SignalRBroadcastService broadcastService, EntityMapper mapper) : IEntitySyncService
 {
     public async Task SyncAsync(EntityDto dto)
     {
@@ -92,9 +94,16 @@ public class EntitySyncService(SmartHomeDbContext context, SignalRBroadcastServi
         await context.SaveChangesAsync();
     }
 
+    public async Task<List<EntityDto>> GetEntities()
+    {
+        var entities = await context.Entities.ToListAsync();
+
+        return entities.Select(mapper.ToDto).ToList();
+    }
+
     private static string GetFriendlyName(EntityDto dto)
     {
-        if (dto.Attributes.TryGetValue("friendly_name", out var value))
+        if (dto.Attributes!.TryGetValue("friendly_name", out var value))
         {
             return value.GetString() ?? dto.EntityId;
         }

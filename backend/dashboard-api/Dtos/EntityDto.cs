@@ -7,7 +7,7 @@ namespace dashboard_api.Dtos;
 public class EntityDto
 {
     [JsonPropertyName("attributes")]
-    public Dictionary<string, JsonElement> Attributes { get; set; } = [];
+    public Dictionary<string, JsonElement>? Attributes { get; set; } = [];
     
     [JsonPropertyName("entity_id")]
     public string EntityId { get; set; } = string.Empty;

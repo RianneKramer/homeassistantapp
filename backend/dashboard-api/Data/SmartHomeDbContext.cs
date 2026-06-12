@@ -5,5 +5,9 @@ namespace dashboard_api.Data;
 
 public class SmartHomeDbContext(DbContextOptions<SmartHomeDbContext> options) : DbContext(options)
 {
-    public DbSet<Light> Lights { get; set; }
+    public DbSet<Entity> Entities { get; set; }
+    public DbSet<Scene> Scenes { get; set; }
+    public DbSet<SceneTrigger> SceneTriggers { get; set; }
+    public DbSet<SceneAction> SceneActions { get; set; }
+    
 }

@@ -6,7 +6,7 @@ using dashboard_api.Models;
 
 namespace dashboard_api.Services;
 
-public class HomeAssistantWebSocketService(IConfiguration configuration, LightStateService lightStateService)
+public class HomeAssistantWebSocketService(IConfiguration configuration, EntitySyncService syncService)
 {
 
     public async Task StartListening()
@@ -47,7 +47,7 @@ public class HomeAssistantWebSocketService(IConfiguration configuration, LightSt
 
             var json = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
-            HandleMessage(json);
+            await HandleMessage(json);
         }
     }
 
@@ -64,51 +64,22 @@ public class HomeAssistantWebSocketService(IConfiguration configuration, LightSt
             CancellationToken.None);
     }
 
-    private async void HandleMessage(string json)
+    private async Task HandleMessage(string json)
     {
-        var entity = JsonSerializer.Deserialize<HomeAssistantMessage>(json);
+        var message = JsonSerializer.Deserialize<HomeAssistantMessage>(json);
 
-        var domain = entity?.Event?.Data?.EntityId.Split('.')[0];
+        var newState = message?.Event?.Data.NewState;
 
-        switch (domain)
+        if (newState == null)
+            return;
+
+        var dto = new EntityDto
         {
-            case "light":
-                Console.WriteLine("Light Event");
-                await lightStateService.SyncLight(
-                [
-                    new EntityDto
-                    {
-                        EntityId = entity!.Event!.Data!.NewState!.EntityId,
-                        State = entity.Event.Data.NewState.State,
-                        Attributes = entity.Event.Data.NewState.Attributes
-                    }
-                ]);
-                
-                break;
-            case "sun":
-                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
-                foreach (var attribute in entity.Event.Data.NewState.Attributes)
-                {
-                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
-                }
-                break;
-            case "weather":
-                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
-                foreach (var attribute in entity.Event.Data.NewState.Attributes)
-                {
-                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
-                }
-                break;
-            case "sensor":
-                Console.WriteLine($"State: {entity.Event.Data.NewState.State}");
-                foreach (var attribute in entity.Event.Data.NewState.Attributes)
-                {
-                    Console.WriteLine($"{attribute.Key}: {attribute.Value}");
-                }
-                break;
-            default:
-                Console.WriteLine(json);
-                break;
-        }
+            EntityId = newState.EntityId,
+            State = newState.State,
+            Attributes = newState.Attributes
+        };
+
+        await syncService.SyncAsync(dto);
     }
 }

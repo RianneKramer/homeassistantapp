@@ -5,17 +5,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace dashboard_api.Services;
 
-public class SignalRBroadcastService
+public class SignalRBroadcastService(IHubContext<HomeAssistantHub> hubContext)
 {
-    private readonly IHubContext<HomeAssistantHub> _hubContext;
-    
-    public SignalRBroadcastService(IHubContext<HomeAssistantHub> hubContext)
+    public async Task BroadcastUpdate(Entity dto)
     {
-        _hubContext = hubContext;
-    }
-
-    public async Task BroadcastLightUpdate(LightDto light)
-    {
-        await _hubContext.Clients.All.SendAsync("LightUpdated", light);
+        await hubContext.Clients.All.SendAsync("EntityUpdated", dto);
     }
 }

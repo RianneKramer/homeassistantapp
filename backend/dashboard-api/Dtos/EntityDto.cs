@@ -12,9 +12,6 @@ public class EntityDto
     [JsonPropertyName("entity_id")]
     public string EntityId { get; set; } = string.Empty;
     
-    [JsonPropertyName("last_changed")]
-    public string LastChanged { get; set; } = string.Empty;
-    
     [JsonPropertyName("state")]
     public string State { get; set; } = string.Empty;
 }

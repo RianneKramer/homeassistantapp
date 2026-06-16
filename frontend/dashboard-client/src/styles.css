@@ -1,1 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
+main {
+  font-family: sans-serif;
+}
+
+.widget {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.widget-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: anywhere;
+}
+
+.widget-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.widget-actions {
+  display: flex;
+  gap: .5rem;
+}
+
+.widget-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, 24.4%);
+  gap: 1rem;
+}

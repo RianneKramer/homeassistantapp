@@ -1,0 +1,77 @@
+<form [formGroup]="form">
+
+<label>Name</label>
+
+<input type="text" formControlName="name">
+
+<label>Trigger Type</label>
+
+<select formControlName="triggerType">
+  <option [value]="0">
+    State
+  </option>
+
+  <option [value]="1">
+    Scheduled
+  </option>
+</select>
+
+@if (form.value.triggerType == 1) {
+  <label>Trigger At</label>
+
+  <input type="datetime-local" formControlName="triggerAt">
+}
+
+<hr>
+
+<h3>Triggers</h3>
+
+<button type="button" (click)="addTrigger()">
+  Add Trigger
+</button>
+
+<div formArrayName="triggers">
+  @for (trigger of triggers.controls; track $index) {
+    <div [formGroupName]="$index">
+      <input formControlName="entityId" placeholder="sensor.temperature">
+
+      <select formControlName="operator">
+        <option>==</option>
+        <option>!=</option>
+        <option>></option>
+        <option><</option>
+      </select>
+
+      <input formControlName="value" placeholder="25">
+
+    </div>
+  }
+
+</div>
+
+<hr>
+
+<h3>Actions</h3>
+
+<button type="button" (click)="addAction()">
+  Add Action
+</button>
+
+<div formArrayName="actions">
+  @for (actions of actions.controls; track $index) {
+    <div [formGroupName]="$index">
+
+      <input formControlName="entityId" placeholder="light.kitchen">
+
+      <select formControlName="action">
+        <option>turn_on</option>
+        <option>turn_off</option>
+        <option>toggle</option>
+      </select>
+    </div>
+  }
+</div>
+
+<button type="submit" (click)="save()"> Save </button>
+
+</form>

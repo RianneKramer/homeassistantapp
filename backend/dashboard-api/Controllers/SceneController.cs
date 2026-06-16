@@ -31,6 +31,10 @@ namespace dashboard_api.Controllers
         {
             var scene = await sceneManagementService.CreateSceneAsync(dto);
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return CreatedAtAction(
                 nameof(Get),
                 new { id = scene.Id },
@@ -73,6 +77,17 @@ namespace dashboard_api.Controllers
             return await sceneManagementService.DisableSceneAsync(id)
                 ? Ok()
                 : NotFound();
+        }
+
+        [HttpPost("{id:int}/execute")]
+        public async Task<IActionResult> Execute(int id)
+        {
+            await sceneManagementService.ExecuteScene(id);
+
+            return Ok(new
+            {
+                message = "Scene executed"
+            });
         }
     }
 }

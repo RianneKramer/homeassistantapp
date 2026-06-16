@@ -1,0 +1,12 @@
+<div class="widget">
+  <div class="widget-header">
+    <h3 class="widget-title">{{entity.name}}</h3>
+  </div>
+    <p>{{entity.state}}</p>
+  <div class="widget-actions">
+    <button (click)="turnOn()"> On </button>
+    <button (click)="turnOff()"> Off </button>
+  </div>
+  <input type="range" min="1" max="255" [value]="brightness" [disabled]="!isOn" (input)="onSliderChange($event)"/>
+  <span>{{ brightness }}</span>
+</div>

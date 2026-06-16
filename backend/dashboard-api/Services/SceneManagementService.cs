@@ -6,10 +6,11 @@ using dashboard_api.Interfaces;
 using dashboard_api.Mappers;
 using dashboard_api.Models;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace dashboard_api.Services;
 
-public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapper, ISceneValidationService validationService) : ISceneManagementService
+public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapper, ISceneValidationService validationService, DeviceControllerService deviceController) : ISceneManagementService
 {
     public async Task<List<SceneResponseDto>> GetScenes()
     {
@@ -149,5 +150,34 @@ public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapp
         scene.Enabled = false;
         await context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task ExecuteScene(int sceneId)
+    {
+        var scene = await context.Scenes
+            .Include(x => x.Actions)
+            .FirstOrDefaultAsync(x => x.Id == sceneId);
+
+        if (scene == null)
+        {
+            throw new KeyNotFoundException($"Scene with id {sceneId} not found");
+        }
+
+        foreach (var action in scene.Actions)
+        {
+            await deviceController.ExecuteAsync(
+                new DeviceCommandDto
+                {
+                    EntityId = action.EntityId,
+                    Action = action.Action,
+                    Data = string.IsNullOrWhiteSpace(action.PayloadJson)
+                        ? null
+                        : JsonSerializer.Deserialize<Dictionary<string, object>>(action.PayloadJson)
+                });
+        }
+
+        scene.LastExecutedAt = SystemClock.Instance.GetCurrentInstant();
+        
+        await context.SaveChangesAsync();
     }
 }

@@ -10,8 +10,10 @@ public class EntityMapper
     {
         return new EntityDto
         {
+            Id = entity.Id,
             EntityId = entity.EntityId,
             State = entity.State,
+            Name = entity.Name,
             Attributes = string.IsNullOrWhiteSpace(entity.AttributeJson)
                 ? null
                 : TryDeserialize(entity.AttributeJson)

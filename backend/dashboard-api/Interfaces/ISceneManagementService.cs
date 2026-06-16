@@ -11,4 +11,5 @@ public interface ISceneManagementService
     Task<bool> DeleteSceneAsync(int id);
     Task<bool> EnableSceneAsync(int id);
     Task<bool> DisableSceneAsync(int id);
+    Task ExecuteScene(int sceneId);
 }

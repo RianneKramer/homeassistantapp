@@ -46,7 +46,7 @@ public class EntitySyncService(SmartHomeDbContext context, SignalRBroadcastServi
         
         await context.SaveChangesAsync();
         
-        await broadcastService.BroadcastUpdate(entity);
+        await broadcastService.BroadcastUpdate(mapper.ToDto(entity));
     }
 
     public async Task SyncManyAsync(IEnumerable<EntityDto>? dtos)

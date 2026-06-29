@@ -1,8 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import {catchError, throwError} from 'rxjs';
+import {inject} from '@angular/core';
+import {LoginStore} from '../stores/login.store';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authToken');
+  const loginStore = inject(LoginStore)
 
   if (token) {
     req = req.clone({
@@ -14,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err) => {
       if (err.status === 401) {
-        //logout
+        loginStore.logout()
       }
       return throwError(() => err);
     })

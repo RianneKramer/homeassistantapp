@@ -1,42 +1,42 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Scene} from '../models/scene.model';
+import {CreateScene, Scene, UpdateScene} from '../models/scene.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SceneApiService {
-  private baseUrl = 'http://localhost:5001';
+  private baseUrl = 'http://localhost:5001/api/Scene';
   private http = inject(HttpClient);
 
   getScenes() {
-    return this.http.get<Scene[]>(`${this.baseUrl}/api/Scene`);
+    return this.http.get<Scene[]>(`${this.baseUrl}`);
   }
 
-  createScene(scene: any) {
-    return this.http.post<Scene>(`${this.baseUrl}/api/Scene`, scene);
+  createScene(scene: CreateScene) {
+    return this.http.post<Scene>(`${this.baseUrl}`, scene);
   }
 
   getScene(id: number) {
-    return this.http.get<Scene>(`${this.baseUrl}/api/Scenes/${id}`);
+    return this.http.get<Scene>(`${this.baseUrl}/${id}`);
   }
 
-  updateScene(scene: any, id: number) {
-    return this.http.put<Scene>(`${this.baseUrl}/api/Scene/${id}`, scene);
+  updateScene(id: number, scene: UpdateScene) {
+    return this.http.put<Scene>(`${this.baseUrl}/${id}`, scene);
   }
 
   deleteScene(id: number) {
-    return this.http.delete(`${this.baseUrl}/api/Scene/${id}`);
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  enableScene(id: number) {
-    return this.http.post(`${this.baseUrl}/api/Scene/${id}/enable`, {});
+  scenePost(id: number, endpoint: string) {
+    return this.http.post(`${this.baseUrl}/${id}/${endpoint}`, {});
   }
 
   disableScene(id: number) {
-    return this.http.post(`${this.baseUrl}/api/Scene/${id}/disable`, {});
+    return this.http.post(`${this.baseUrl}/${id}/disable`, {});
   }
   executeScene(id: number) {
-    return this.http.post(`${this.baseUrl}/api/Scene/${id}/execute`, {});
+    return this.http.post(`${this.baseUrl}/${id}/execute`, {});
   }
 }

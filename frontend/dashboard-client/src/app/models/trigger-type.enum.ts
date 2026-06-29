@@ -1,4 +1,4 @@
 export enum TriggerType {
-  state,
-  scheduled
+  state = 0,
+  scheduled = 1,
 }

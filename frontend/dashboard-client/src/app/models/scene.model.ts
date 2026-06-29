@@ -7,7 +7,26 @@ export interface Scene {
   name: string;
   enabled: boolean;
   triggerType: TriggerType;
-  triggerAt: string;
+  triggerAt: string | null;
+  runOnce: boolean;
+  triggers: SceneTrigger[];
+  actions: SceneAction[];
+}
+
+export interface CreateScene {
+  name: string;
+  triggerType: TriggerType;
+  triggerAt: string | null;
+  runOnce: boolean;
+  triggers: SceneTrigger[];
+  actions: SceneAction[];
+}
+
+export interface UpdateScene {
+  name: string;
+  enabled: boolean;
+  triggerType: TriggerType;
+  triggerAt: string | null;
   runOnce: boolean;
   triggers: SceneTrigger[];
   actions: SceneAction[];

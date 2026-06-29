@@ -12,6 +12,7 @@ import {SensorCardComponent} from '../../components/sensor-card/sensor-card.comp
 })
 export class SensorMonitoringPageComponent {
   private entityStore = inject(EntityStore)
+
   sensors = computed(() =>
     this.entityStore.entities()
       .filter(entity =>

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateScenePageComponent } from './create-scene-page.component';
+import { SceneFormPageComponent } from './scene-form-page.component';
 
 describe('CreateScenePageComponent', () => {
-  let component: CreateScenePageComponent;
-  let fixture: ComponentFixture<CreateScenePageComponent>;
+  let component: SceneFormPageComponent;
+  let fixture: ComponentFixture<SceneFormPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateScenePageComponent],
+      imports: [SceneFormPageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateScenePageComponent);
+    fixture = TestBed.createComponent(SceneFormPageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

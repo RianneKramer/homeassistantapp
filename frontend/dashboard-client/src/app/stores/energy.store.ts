@@ -1,6 +1,5 @@
 import {Injectable, signal} from '@angular/core';
 import {EnergyOverview} from '../models/energy-overview.model';
-import {HttpClient} from '@angular/common/http';
 import {EnergyApiService} from '../services/energy-api.service';
 
 @Injectable({

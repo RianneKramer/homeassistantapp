@@ -1,7 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {EntityStore} from '../stores/entity.store';
-import {Entity} from '../models/entity.model';
 import {EnergyStore} from '../stores/energy.store';
 
 @Injectable({

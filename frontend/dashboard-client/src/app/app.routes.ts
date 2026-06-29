@@ -1,55 +1,39 @@
 import { Routes } from '@angular/router';
+import {LoginPageComponent} from './pages/login-page/login-page.component';
+import {DeviceControlPageComponent} from './pages/device-control-page/device-control-page.component';
+import {SensorMonitoringPageComponent} from './pages/sensor-monitoring-page/sensor-monitoring-page.component';
+import {SceneManagementPageComponent} from './pages/scene-management-page/scene-management-page.component';
+import {SceneFormPageComponent} from './pages/scene-form-page/scene-form-page.component';
+import {EnergyOverviewPageComponent} from './pages/energy-overview-page/energy-overview-page.component';
+import {SettingsPageComponent} from './pages/settings-page/settings-page.component';
+import {authGuard} from './services/auth-guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    path: 'devices', component: DeviceControlPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'devices',
-    loadComponent: () =>
-      import('./pages/device-control-page/device-control-page.component')
-        .then(m => m.DeviceControlPageComponent)
+    path: 'sensors', component: SensorMonitoringPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'sensors',
-    loadComponent: () =>
-      import('./pages/sensor-monitoring-page/sensor-monitoring-page.component')
-        .then(m => m.SensorMonitoringPageComponent)
+    path: 'scenes', component: SceneManagementPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'scenes',
-    loadComponent: () =>
-      import('./pages/scene-management-page/scene-management-page.component')
-        .then(m => m.SceneManagementPageComponent)
+    path: 'scenes/create', component: SceneFormPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'scenes/create',
-    loadComponent: () =>
-      import('./pages/create-scene-page/create-scene-page.component')
-        .then(m => m.CreateScenePageComponent)
+    path: 'scenes/:id/edit', component: SceneFormPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'energy',
-    loadComponent: () =>
-      import('./pages/energy-overview-page/energy-overview-page.component')
-        .then(m => m.EnergyOverviewPageComponent)
+    path: 'energy', component: EnergyOverviewPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'settings',
-    loadComponent: () =>
-      import('./pages/settings-page/settings-page.component')
-        .then(m => m.SettingsPageComponent)
+    path: 'settings', component: SettingsPageComponent, canActivate: [authGuard]
   },
   {
-    path: 'login',
-    loadComponent: () =>
-      import('./pages/login-page/login-page.component')
-        .then(m => m.LoginPageComponent)
+    path: 'login', component: LoginPageComponent
   },
   {
-    path: '**',
-    redirectTo: 'devices',
+    path: '**', redirectTo: 'login'
   }
 ];

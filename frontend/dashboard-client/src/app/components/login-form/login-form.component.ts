@@ -1,5 +1,7 @@
-import {Component, signal} from '@angular/core';
+import {Component, effect, inject, signal} from '@angular/core';
 import {form, FormField, required, submit} from '@angular/forms/signals';
+import {LoginStore} from '../../stores/login.store';
+import {Router} from '@angular/router';
 
 interface Login {
   username: string;
@@ -15,6 +17,18 @@ interface Login {
   styleUrl: './login-form.component.css',
 })
 export class LoginFormComponent {
+  private loginStore = inject(LoginStore);
+  private router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      if (this.loginStore.isLoggedIn()) {
+        console.log(this.loginStore.isLoggedIn())
+        this.router.navigate(['/devices']);
+      }
+    });
+  }
+
   loginModel = signal<Login>({
     username: '',
     password: '',
@@ -28,6 +42,8 @@ export class LoginFormComponent {
   onSubmit(event: Event) {
     event.preventDefault();
 
-    submit(this.loginForm);
+    submit(this.loginForm, async () => {
+      this.loginStore.login(this.loginModel());
+    });
   }
 }

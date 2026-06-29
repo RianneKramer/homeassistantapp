@@ -16,10 +16,10 @@
     </button>
   </div>
   <div class="widget-actions">
-    <button (click)="execute()">
+    <button [routerLink]="['/scenes', scene.id, 'edit']">
       Edit
     </button>
-    <button (click)="execute()">
+    <button (click)="delete()">
       Delete
     </button>
   </div>

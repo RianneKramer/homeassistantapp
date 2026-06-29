@@ -1,65 +1,76 @@
 import {Component, inject} from '@angular/core';
-import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TriggerType} from '../../models/trigger-type.enum';
-import {SceneApiService} from '../../services/scene-api.service';
-import {Router} from '@angular/router';
+import {form, FormField, required} from '@angular/forms/signals';
+import {FormsModule} from '@angular/forms';
+import {EntityStore} from '../../stores/entity.store';
+import {SceneTrigger} from '../../models/scene-trigger.model';
+import {SceneAction} from '../../models/scene-action.model';
+import {SceneStore} from '../../stores/scene.store';
 
 @Component({
   selector: 'app-create-scene-dialog',
   imports: [
-    ReactiveFormsModule
+    FormField,
+    FormsModule
   ],
   templateUrl: './create-scene-dialog.component.html',
   styleUrl: './create-scene-dialog.component.css',
+  providers: [SceneStore]
 })
 export class CreateSceneDialogComponent {
-  private fb = inject(FormBuilder);
-  private router = inject(Router)
-  private sceneApi = inject(SceneApiService)
+  private sceneStore = inject(SceneStore)
+  private entityStore = inject(EntityStore);
 
-  form = this.fb.group({
-    name: ['', [Validators.required]],
-    triggerType: [TriggerType.state],
-    triggerAt: [null],
-    runOnce: [true],
-    triggers: this.fb.array([]),
-    actions: this.fb.array([])
-  });
+  entities = this.entityStore.entities;
+  isEditMode = this.sceneStore.isEditMode;
 
-  get triggers():FormArray {
-    return this.form.controls.triggers;
+  ngOnInit() {
+    this.sceneStore.init();
   }
 
-  get actions():FormArray {
-    return this.form.controls.actions;
-  }
+  sceneModel = this.sceneStore.sceneModel;
+
+  sceneForm = form(this.sceneModel, (fieldPath) => {
+    required(fieldPath.name);
+    required(fieldPath.triggerType);
+    required(fieldPath.actions);
+  })
 
   addTrigger() {
-    this.triggers.push(
-      this.fb.group({
-        entityId: ['', [Validators.required]],
-        operator: ['=='],
-        value: ['']
-      })
-    );
+    this.sceneStore.addTrigger();
   }
 
   addAction() {
-    this.actions.push(
-      this.fb.group({
-        entityId: ['', [Validators.required]],
-        action: ['turn_on']
-      })
-    )
+    this.sceneStore.addAction();
   }
 
-  save() {
-    if (this.form.invalid) {
-      return;
-    }
-
-    console.log(this.form.getRawValue())
-
-    this.sceneApi.createScene(this.form.getRawValue()).subscribe(() => this.router.navigate(['/scenes']));
+  removeTrigger(index: number) {
+    this.sceneStore.removeTrigger(index);
   }
+
+  removeAction(index: number) {
+    this.sceneStore.removeAction(index);
+  }
+
+  updateTrigger(index: number, field: keyof SceneTrigger, value: any) {
+    this.sceneStore.updateTrigger(index, field, value);
+  }
+
+  updateAction(index: number, field: keyof SceneAction, value: any) {
+    this.sceneStore.updateAction(index, field, value);
+  }
+
+  onTriggerTypeChanged(event: Event) {
+    this.sceneStore.onTriggerTypeChanged(event);
+  }
+
+  saveCreate() {
+    this.sceneStore.saveCreate();
+  }
+
+  saveUpdate() {
+    this.sceneStore.saveUpdate();
+  }
+
+  protected readonly TriggerType = TriggerType;
 }

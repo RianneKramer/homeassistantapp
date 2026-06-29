@@ -1,77 +1,167 @@
-<form [formGroup]="form">
+<form>
 
-<label>Name</label>
+  <h2>General</h2>
 
-<input type="text" formControlName="name">
+  <label>Name</label>
+  <input
+    type="text"
+    [formField]="sceneForm.name">
 
-<label>Trigger Type</label>
+  <label>Trigger Type</label>
+  <select
+    [value]="sceneModel().triggerType"
+    (change)="onTriggerTypeChanged($event)">
 
-<select formControlName="triggerType">
-  <option [value]="0">
-    State
-  </option>
+    <option value="0">State</option>
+    <option value="1">Scheduled</option>
 
-  <option [value]="1">
-    Scheduled
-  </option>
-</select>
+  </select>
 
-@if (form.value.triggerType == 1) {
-  <label>Trigger At</label>
+  @if(sceneModel().triggerType === TriggerType.scheduled)
+  {
+    <label>Trigger At</label>
+    <input
+      type="datetime-local"
+      [formField]="sceneForm.triggerAt">
+  }
 
-  <input type="datetime-local" formControlName="triggerAt">
-}
+  <label>
+    <input
+      type="checkbox"
+      [formField]="sceneForm.runOnce">
 
-<hr>
+    Run Once
+  </label>
 
-<h3>Triggers</h3>
+  <hr>
 
-<button type="button" (click)="addTrigger()">
-  Add Trigger
-</button>
+  <div class="section-header">
+    <h2>Triggers</h2>
 
-<div formArrayName="triggers">
-  @for (trigger of triggers.controls; track $index) {
-    <div [formGroupName]="$index">
-      <input formControlName="entityId" placeholder="sensor.temperature">
+    <button
+      type="button"
+      (click)="addTrigger()">
 
-      <select formControlName="operator">
-        <option>==</option>
-        <option>!=</option>
-        <option>></option>
-        <option><</option>
+      + Add Trigger
+
+    </button>
+  </div>
+
+  @for(trigger of sceneModel().triggers; track $index)
+  {
+    <div class="widget">
+
+      <label>Entity</label>
+
+      <select
+        [value]="trigger.entityId"
+        (change)="updateTrigger($index, 'entityId', $any($event.target).value)">
+
+        @for(entity of entities(); track entity.entity_id)
+        {
+          <option [value]="entity.entity_id">
+            {{ entity.entity_id }}
+          </option>
+        }
+
       </select>
 
-      <input formControlName="value" placeholder="25">
+      <label>Operator</label>
+
+      <select
+        [value]="trigger.operator"
+        (change)="updateTrigger($index, 'operator', $any($event.target).value)">
+
+        <option value="==">==</option>
+        <option value="!=">!=</option>
+        <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+
+      </select>
+
+      <label>Value</label>
+
+      <input
+      [value]="trigger.entityId"
+      (input)="updateTrigger($index, 'entityId', $any($event.target).value)">
+
+      <button
+        type="button"
+        (click)="removeTrigger($index)">
+
+        Remove
+
+      </button>
 
     </div>
   }
 
-</div>
+  <hr>
 
-<hr>
+  <div class="section-header">
 
-<h3>Actions</h3>
+    <h2>Actions</h2>
 
-<button type="button" (click)="addAction()">
-  Add Action
-</button>
+    <button
+      type="button"
+      (click)="addAction()">
 
-<div formArrayName="actions">
-  @for (actions of actions.controls; track $index) {
-    <div [formGroupName]="$index">
+      + Add Action
 
-      <input formControlName="entityId" placeholder="light.kitchen">
+    </button>
 
-      <select formControlName="action">
-        <option>turn_on</option>
-        <option>turn_off</option>
-        <option>toggle</option>
+  </div>
+
+  @for(action of sceneModel().actions; track $index)
+  {
+    <div class="widget">
+
+      <label>Entity</label>
+
+      <select
+        [value]="action.entityId"
+        (change)="updateAction($index, 'entityId', $any($event.target).value)">
+
+        @for(entity of entities(); track entity.entity_id)
+        {
+          <option [value]="entity.entity_id">
+            {{ entity.entity_id }}
+          </option>
+        }
+
       </select>
+
+      <label>Action</label>
+
+      <select
+        [value]="action.action"
+        (change)="updateAction($index, 'action', $any($event.target).value)">
+
+        <option value="turn_on">Turn On</option>
+        <option value="turn_off">Turn Off</option>
+        <option value="toggle">Toggle</option>
+
+      </select>
+
+      <button
+        type="button"
+        (click)="removeAction($index)">
+
+        Remove
+
+      </button>
+
     </div>
   }
-</div>
 
-<button type="submit" (click)="save()"> Save </button>
+  <hr>
+
+  <button
+    type="button"
+    (click)="isEditMode() ? saveUpdate() : saveCreate()">
+
+    {{ isEditMode() ? 'Update Scene' : 'Save Scene' }}
+
+  </button>
 
 </form>

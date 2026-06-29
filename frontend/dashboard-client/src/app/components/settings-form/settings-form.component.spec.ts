@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TriggerEditorComponent } from './trigger-editor.component';
+import { SettingsFormComponent } from './settings-form.component';
 
-describe('TriggerEditorComponent', () => {
-  let component: TriggerEditorComponent;
-  let fixture: ComponentFixture<TriggerEditorComponent>;
+describe('SettingsFormComponent', () => {
+  let component: SettingsFormComponent;
+  let fixture: ComponentFixture<SettingsFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TriggerEditorComponent],
+      imports: [SettingsFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TriggerEditorComponent);
+    fixture = TestBed.createComponent(SettingsFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

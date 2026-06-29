@@ -1,0 +1,54 @@
+<h2>Current Configuration</h2>
+
+@if (currentSettings(); as settings) {
+  <p>
+    Current URL:
+    {{settings.homeAssistantUrl}}
+  </p>
+  <p>
+    Current Access Token (ending in):
+    {{
+      currentSettings()!.homeAssistantToken.slice(-4)
+    }}
+  </p>
+}
+
+<form>
+  <div>
+    <label>
+      Home Assistant URL
+      <input type="url" [formField]="settingsForm.homeAssistantUrl"/>
+    </label>
+    @if (settingsForm.homeAssistantUrl().invalid() && settingsForm.homeAssistantUrl().touched()) {
+      <div class="error">
+        @for (error of settingsForm.homeAssistantUrl().errors(); track error.kind) {
+          <span>{{error.message}}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    <label>
+      Home Assistant Token
+      <input type="password" [formField]="settingsForm.homeAssistantToken">
+    </label>
+    @if (settingsForm.homeAssistantToken().invalid() && settingsForm.homeAssistantToken().touched()){
+      <div class="error">
+        @for (error of settingsForm.homeAssistantToken().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <button type="button" (click)="testConnection()">Test Connection</button>
+  @if (connectionStatus() === true)
+  {
+    <p>Connected</p>
+  } @else if (connectionStatus() === false)
+  {
+    <p>Unable to Connect</p>
+  }
+  <button type="button" (click)="save()">Save</button>
+</form>

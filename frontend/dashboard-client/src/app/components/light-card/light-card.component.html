@@ -7,6 +7,6 @@
     <button (click)="turnOn()"> On </button>
     <button (click)="turnOff()"> Off </button>
   </div>
-  <input type="range" min="1" max="255" [value]="brightness" [disabled]="!isOn" (input)="onSliderChange($event)"/>
-  <span>{{ brightness }}</span>
+  <input type="range" min="1" max="255" [value]="brightness()" [disabled]="!isOn" (input)="onSliderChange($event)"/>
+  <span>{{ brightness() }}</span>
 </div>

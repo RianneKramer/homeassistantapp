@@ -1,15 +1,28 @@
-﻿using System.Text.Json;
-using dashboard_api.Data;
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using dashboard_api.Dtos;
 using dashboard_api.Interfaces;
 using dashboard_api.Models;
 
 namespace dashboard_api.Services;
 
-public class HomeAssistantRestService(HttpClient httpClient, SmartHomeDbContext context, IEntitySyncService syncService)
+public class HomeAssistantRestService(IEntitySyncService syncService, IHomeAssistantConfigurationService configurationService, HttpClient httpClient) : IHomeAssistantRestService
 {
+    private async Task ConfigureClientAsync()
+    {
+        var config = await configurationService.GetConfigurationAsync();
+        
+        httpClient.BaseAddress = new Uri(config.Url);
+        
+        httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", config.Token);
+    }
+    
+    
     public async Task<Response?> GetApi()
     {
+        await ConfigureClientAsync();
+        
         var response = await httpClient.GetAsync("/api/");
         response.EnsureSuccessStatusCode();
 
@@ -20,6 +33,8 @@ public class HomeAssistantRestService(HttpClient httpClient, SmartHomeDbContext 
 
     public async Task<List<DomainDto>?> GetEntities()
     {
+        await ConfigureClientAsync();
+        
         var response = await httpClient.GetAsync("/api/services");
         response.EnsureSuccessStatusCode();
         
@@ -30,6 +45,8 @@ public class HomeAssistantRestService(HttpClient httpClient, SmartHomeDbContext 
     
     public async Task SyncCurrentStates()
     {
+        await ConfigureClientAsync();
+        
         var entities = await httpClient.GetFromJsonAsync<List<EntityDto>>("/api/states");
 
         if (entities == null)
@@ -40,6 +57,8 @@ public class HomeAssistantRestService(HttpClient httpClient, SmartHomeDbContext 
     
     public async Task CallService(string domain, string action, object payload)
     {
+        await ConfigureClientAsync();
+        
         await httpClient.PostAsJsonAsync(
             $"/api/services/{domain}/{action}",
             payload);

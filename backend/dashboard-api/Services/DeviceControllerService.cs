@@ -3,7 +3,7 @@ using dashboard_api.Interfaces;
 
 namespace dashboard_api.Services;
 
-public class DeviceControllerService
+public class DeviceControllerService : IDeviceControllerService
 {
     private readonly Dictionary<string, IDeviceDomainHandler> _handlers;
 

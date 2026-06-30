@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dashboard_api.Services;
 
-public class EntitySyncService(SmartHomeDbContext context, SignalRBroadcastService broadcastService, EntityMapper mapper) : IEntitySyncService
+public class EntitySyncService(SmartHomeDbContext context, ISignalRBroadcastService broadcastService, EntityMapper mapper) : IEntitySyncService
 {
     public async Task SyncAsync(EntityDto dto)
     {

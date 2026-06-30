@@ -7,27 +7,28 @@ using dashboard_api.Models;
 
 namespace dashboard_api.Services;
 
-public class HomeAssistantWebSocketService(IConfiguration configuration, IEntitySyncService syncService)
+public class HomeAssistantWebSocketService(IEntitySyncService syncService, IHomeAssistantConfigurationService configurationService) : IHomeAssistantWebSocketService
 {
+    private ClientWebSocket? _webSocket;
 
-    public async Task StartListening()
+    public async Task StartListening(CancellationToken cancellationToken)
     {
-        var websocketUrl = configuration["HomeAssistant:WebSocket"];
-        var token = configuration["HomeAssistant:Token"];
-
-        using var socket = new ClientWebSocket();
+        _webSocket?.Dispose();
+        _webSocket = new ClientWebSocket();
         
-        await socket.ConnectAsync(new Uri(websocketUrl!), CancellationToken.None);
+        var config = await configurationService.GetConfigurationAsync();
+        
+        await _webSocket.ConnectAsync(new Uri(config.WebSocketUrl), cancellationToken);
 
         var auth = new
         {
             type = "auth",
-            access_token = token
+            access_token = config.Token
         };
         
-        await Send(socket, auth);
+        await Send(_webSocket, auth);
 
-        await Task.Delay(1000);
+        await Task.Delay(1000, cancellationToken);
 
         var subscribe = new
         {
@@ -36,13 +37,13 @@ public class HomeAssistantWebSocketService(IConfiguration configuration, IEntity
             event_type = "state_changed"
         };
 
-        await Send(socket, subscribe);
+        await Send(_webSocket, subscribe);
 
         var buffer = new byte[8192];
 
-        while (socket.State == WebSocketState.Open)
+        while (_webSocket.State == WebSocketState.Open)
         {
-            var result = await socket.ReceiveAsync(
+            var result = await _webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer),
                 CancellationToken.None);
 

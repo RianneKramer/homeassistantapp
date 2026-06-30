@@ -10,7 +10,7 @@ using NodaTime;
 
 namespace dashboard_api.Services;
 
-public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapper, ISceneValidationService validationService, DeviceControllerService deviceController) : ISceneManagementService
+public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapper, ISceneValidationService validationService, IDeviceControllerService deviceController) : ISceneManagementService
 {
     public async Task<List<SceneResponseDto>> GetScenes()
     {
@@ -30,8 +30,13 @@ public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapp
             .Include(x => x.Triggers)
             .Include(x => x.Actions)
             .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (scene == null)
+        {
+            throw new KeyNotFoundException($"Scene with id {id} not found");
+        }
         
-        return scene == null ? null : mapper.ToDto(scene);
+        return mapper.ToDto(scene);
     }
 
     public async Task<SceneResponseDto> CreateSceneAsync(CreateSceneDto dto)
@@ -50,7 +55,7 @@ public class SceneManagementService(SmartHomeDbContext context, SceneMapper mapp
             TriggerAt =  dto.TriggerAt,
             RunOnce =  dto.RunOnce,
             
-            Triggers = dto.Triggers.Select(t => new SceneTrigger
+            Triggers = dto.Triggers!.Select(t => new SceneTrigger
             {
                 EntityId = t.EntityId,
                 Operator = t.Operator,

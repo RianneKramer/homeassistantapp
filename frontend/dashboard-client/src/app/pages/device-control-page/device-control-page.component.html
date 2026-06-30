@@ -1,0 +1,13 @@
+<main>
+  <h1>Device Control</h1>
+
+  <div class="widget-grid">
+    @for (entity of entities(); track entity.id) {
+      @if (entity.entity_id.startsWith("light")){
+        <app-light-card
+          [entity]="entity">
+        </app-light-card>
+      }
+    }
+  </div>
+</main>

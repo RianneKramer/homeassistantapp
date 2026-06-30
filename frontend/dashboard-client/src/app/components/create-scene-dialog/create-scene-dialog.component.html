@@ -1,0 +1,167 @@
+<form>
+
+  <h2>General</h2>
+
+  <label>Name</label>
+  <input
+    type="text"
+    [formField]="sceneForm.name">
+
+  <label>Trigger Type</label>
+  <select
+    [value]="sceneModel().triggerType"
+    (change)="onTriggerTypeChanged($event)">
+
+    <option value="0">State</option>
+    <option value="1">Scheduled</option>
+
+  </select>
+
+  @if(sceneModel().triggerType === TriggerType.scheduled)
+  {
+    <label>Trigger At</label>
+    <input
+      type="datetime-local"
+      [formField]="sceneForm.triggerAt">
+  }
+
+  <label>
+    <input
+      type="checkbox"
+      [formField]="sceneForm.runOnce">
+
+    Run Once
+  </label>
+
+  <hr>
+
+  <div class="section-header">
+    <h2>Triggers</h2>
+
+    <button
+      type="button"
+      (click)="addTrigger()">
+
+      + Add Trigger
+
+    </button>
+  </div>
+
+  @for(trigger of sceneModel().triggers; track $index)
+  {
+    <div class="widget">
+
+      <label>Entity</label>
+
+      <select
+        [value]="trigger.entityId"
+        (change)="updateTrigger($index, 'entityId', $any($event.target).value)">
+
+        @for(entity of entities(); track entity.entity_id)
+        {
+          <option [value]="entity.entity_id">
+            {{ entity.entity_id }}
+          </option>
+        }
+
+      </select>
+
+      <label>Operator</label>
+
+      <select
+        [value]="trigger.operator"
+        (change)="updateTrigger($index, 'operator', $any($event.target).value)">
+
+        <option value="==">==</option>
+        <option value="!=">!=</option>
+        <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+
+      </select>
+
+      <label>Value</label>
+
+      <input
+      [value]="trigger.entityId"
+      (input)="updateTrigger($index, 'entityId', $any($event.target).value)">
+
+      <button
+        type="button"
+        (click)="removeTrigger($index)">
+
+        Remove
+
+      </button>
+
+    </div>
+  }
+
+  <hr>
+
+  <div class="section-header">
+
+    <h2>Actions</h2>
+
+    <button
+      type="button"
+      (click)="addAction()">
+
+      + Add Action
+
+    </button>
+
+  </div>
+
+  @for(action of sceneModel().actions; track $index)
+  {
+    <div class="widget">
+
+      <label>Entity</label>
+
+      <select
+        [value]="action.entityId"
+        (change)="updateAction($index, 'entityId', $any($event.target).value)">
+
+        @for(entity of entities(); track entity.entity_id)
+        {
+          <option [value]="entity.entity_id">
+            {{ entity.entity_id }}
+          </option>
+        }
+
+      </select>
+
+      <label>Action</label>
+
+      <select
+        [value]="action.action"
+        (change)="updateAction($index, 'action', $any($event.target).value)">
+
+        <option value="turn_on">Turn On</option>
+        <option value="turn_off">Turn Off</option>
+        <option value="toggle">Toggle</option>
+
+      </select>
+
+      <button
+        type="button"
+        (click)="removeAction($index)">
+
+        Remove
+
+      </button>
+
+    </div>
+  }
+
+  <hr>
+
+  <button
+    type="button"
+    (click)="isEditMode() ? saveUpdate() : saveCreate()">
+
+    {{ isEditMode() ? 'Update Scene' : 'Save Scene' }}
+
+  </button>
+
+</form>

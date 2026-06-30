@@ -1,0 +1,26 @@
+<div class="widget">
+  <h3 class="widget-title">
+    {{scene.name}}
+  </h3>
+
+  <div>
+    {{scene.enabled ? 'Enabled' : 'Disabled'}}
+  </div>
+
+  <div class="widget-actions">
+    <button (click)="toggle()">
+      Toggle
+    </button>
+    <button (click)="execute()">
+      Execute
+    </button>
+  </div>
+  <div class="widget-actions">
+    <button [routerLink]="['/scenes', scene.id, 'edit']">
+      Edit
+    </button>
+    <button (click)="delete()">
+      Delete
+    </button>
+  </div>
+</div>

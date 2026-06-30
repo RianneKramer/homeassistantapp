@@ -1,0 +1,7 @@
+<h1>Sensor Monitoring</h1>
+
+<div class="widget-grid">
+  @for (sensor of sensors(); track sensor.entity_id) {
+    <app-sensor-card [entity]="sensor"></app-sensor-card>
+  }
+</div>

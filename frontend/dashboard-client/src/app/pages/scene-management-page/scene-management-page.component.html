@@ -1,0 +1,11 @@
+<h1>Scene Management</h1>
+
+<button routerLink="/scenes/create">
+  New Scene
+</button>
+
+<div class="widget-grid">
+  @for (scene of scenes(); track scene.id) {
+    <app-scene-card [scene]="scene"/>
+  }
+</div>

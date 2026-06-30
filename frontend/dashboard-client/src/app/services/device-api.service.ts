@@ -6,10 +6,10 @@ import {DeviceCommand} from '../models/device-command.model';
   providedIn: 'root',
 })
 export class DeviceApiService {
-  private baseUrl = 'http://192.168.2.26:5001/api/Device';
+  private baseUrl = 'http://localhost:5001';
   private http = inject(HttpClient);
 
   execute(command: DeviceCommand) {
-    return this.http.post(`${this.baseUrl}`, command);
+    return this.http.post(`${this.baseUrl}/api/Device`, command);
   }
 }

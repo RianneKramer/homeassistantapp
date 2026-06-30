@@ -13,22 +13,21 @@ public class SettingsService(SmartHomeDbContext context, IHomeAssistantConnectio
     {
         var settings = await context.Settings.FirstOrDefaultAsync();
 
-        if (settings == null)
-        {
-            settings = new Settings
+        if (settings != null)
+            return new SettingsDto
             {
-                HomeAssistantUrl = "http://192.168.2.29:8123",
-                HomeAssistantToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwNzc5NDdkMDAxNTc0OGQxYTVlZWU5NjFhNmI2OWUyYSIsImlhdCI6MTc4MTI4NjI3MCwiZXhwIjoyMDk2NjQ2MjcwfQ.G2UM-uBbmhsK8BTpIHLLto8bau6qsYGVhxGaprZbmSA"
+                homeAssistantUrl = settings.HomeAssistantUrl,
+                homeAssistantToken = settings.HomeAssistantToken,
             };
-
-            context.Settings.Add(settings);
-            await context.SaveChangesAsync();
-        }
+        
+        settings = new Settings();
+        context.Add(settings);
+        await context.SaveChangesAsync();
 
         return new SettingsDto
         {
             homeAssistantUrl = settings.HomeAssistantUrl,
-            homeAssistantToken = settings.HomeAssistantToken
+            homeAssistantToken = settings.HomeAssistantToken,
         };
     }
 

@@ -6,7 +6,7 @@ import {EnergyOverview} from '../models/energy-overview.model';
   providedIn: 'root',
 })
 export class EnergyApiService {
-  private baseUrl = 'http://192.168.2.26:5001/api/Energy';
+  private baseUrl = 'http://localhost:5001/api/Energy';
   private http = inject(HttpClient);
 
   getOverview(){

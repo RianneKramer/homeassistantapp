@@ -6,7 +6,7 @@ import {CreateScene, Scene, UpdateScene} from '../models/scene.model';
   providedIn: 'root',
 })
 export class SceneApiService {
-  private baseUrl = 'http://192.168.2.26:5001/api/Scene';
+  private baseUrl = 'http://localhost:5001/api/Scene';
   private http = inject(HttpClient);
 
   getScenes() {

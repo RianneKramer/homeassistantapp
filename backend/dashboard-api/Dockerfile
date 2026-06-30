@@ -11,7 +11,6 @@ COPY ["dashboard-api.csproj", "./"]
 RUN dotnet restore "dashboard-api.csproj"
 COPY . .
 WORKDIR "/src/"
-RUN apt-get update && apt-get install -y libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
 RUN dotnet build "./dashboard-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

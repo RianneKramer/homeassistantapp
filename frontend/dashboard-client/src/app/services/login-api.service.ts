@@ -6,7 +6,7 @@ import {Login, LoginResponse} from '../models/login.model';
   providedIn: 'root',
 })
 export class LoginApiService {
-  private baseUrl = 'http://192.168.2.26:5001/api/Login';
+  private baseUrl = 'http://localhost:5001/api/Login';
   private http = inject(HttpClient);
 
   postLogin(credentials: Login){

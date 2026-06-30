@@ -85,7 +85,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowLocalhost", policy =>
     {
         policy
-            .WithOrigins("http://192.168.2.26:4200")
+            .WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -99,28 +99,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var syncServices = scope.ServiceProvider.GetRequiredService<IHomeAssistantRestService>();
-    var db = scope.ServiceProvider.GetRequiredService<SmartHomeDbContext>();
-    var retries = 10;
-
-    while (retries > 0)
-    {
-        try
-        {
-            db.Database.Migrate();
-            break;
-        }
-        catch 
-        {
-            retries--;
-            Thread.Sleep(5000);
-
-            if (retries == 0)
-            {
-                throw;
-            }
-        }
-    }
-
     await syncServices.SyncCurrentStates();
 }
 

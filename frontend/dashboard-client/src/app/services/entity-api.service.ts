@@ -6,10 +6,10 @@ import {Entity} from '../models/entity.model';
   providedIn: 'root',
 })
 export class EntityApiService {
-  private baseUrl = 'http://192.168.2.26:5001/api/Entities';
+  private baseUrl = 'http://localhost:5001';
   private http = inject(HttpClient);
 
   getEntities() {
-    return this.http.get<Entity[]>(`${this.baseUrl}`)
+    return this.http.get<Entity[]>(`${this.baseUrl}/api/Entities`)
   }
 }

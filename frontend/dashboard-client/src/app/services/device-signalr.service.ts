@@ -7,7 +7,7 @@ import {EnergyStore} from '../stores/energy.store';
   providedIn: 'root',
 })
 export class DeviceSignalrService {
-  private baseUrl = 'http://localhost:5001';
+  private baseUrl = 'http://192.168.2.26:5001';
   private hub?: signalR.HubConnection;
   private entityStore = inject(EntityStore);
   private energyStore = inject(EnergyStore);

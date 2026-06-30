@@ -12,7 +12,7 @@ using dashboard_api.Data;
 namespace dashboard_api.Migrations
 {
     [DbContext(typeof(SmartHomeDbContext))]
-    [Migration("20260630105258_Assessment Ensure")]
+    [Migration("20260630132909_Assessment Ensure")]
     partial class AssessmentEnsure
     {
         /// <inheritdoc />
@@ -169,8 +169,8 @@ namespace dashboard_api.Migrations
                         new
                         {
                             Id = 1,
-                            HomeAssistantToken = "",
-                            HomeAssistantUrl = ""
+                            HomeAssistantToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwNzc5NDdkMDAxNTc0OGQxYTVlZWU5NjFhNmI2OWUyYSIsImlhdCI6MTc4MTI4NjI3MCwiZXhwIjoyMDk2NjQ2MjcwfQ.G2UM-uBbmhsK8BTpIHLLto8bau6qsYGVhxGaprZbmSA",
+                            HomeAssistantUrl = "http://192.168.2.28:8123"
                         });
                 });
 

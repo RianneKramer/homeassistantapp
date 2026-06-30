@@ -1,5 +1,6 @@
 using dashboard_api.Dtos;
 using dashboard_api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,21 +21,25 @@ namespace dashboard_api.Controllers
         {
             var scene = await sceneManagementService.GetScene(id);
 
-            return scene == null
-                ? NotFound()
-                : Ok(scene);
+            if (scene == null)
+            {
+                return NotFound("Scene not found");
+            }
+
+            return Ok(scene);
         }
 
         [HttpPost]
         public async Task<ActionResult<SceneResponseDto>> Create(
             [FromBody] CreateSceneDto dto)
         {
-            var scene = await sceneManagementService.CreateSceneAsync(dto);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            
+            var scene = await sceneManagementService.CreateSceneAsync(dto);
+            
             return CreatedAtAction(
                 nameof(Get),
                 new { id = scene.Id },

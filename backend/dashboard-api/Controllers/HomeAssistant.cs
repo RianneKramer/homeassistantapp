@@ -1,12 +1,11 @@
-using dashboard_api.Services;
-using Microsoft.AspNetCore.Http;
+using dashboard_api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dashboard_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HomeAssistant(HomeAssistantRestService restService) : ControllerBase
+    public class HomeAssistant(IHomeAssistantRestService restService) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetStatus()

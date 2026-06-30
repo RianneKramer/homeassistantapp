@@ -9,6 +9,6 @@ public class CreateSceneDto
     public TriggerType TriggerType { get; set; }
     public Instant? TriggerAt { get; set; }
     public bool RunOnce { get; set; }
-    public List<SceneTriggerDto> Triggers { get; set; } = [];
+    public List<SceneTriggerDto>? Triggers { get; set; } = [];
     public List<SceneActionDto> Actions { get; set; } = [];
 }

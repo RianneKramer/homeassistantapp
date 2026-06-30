@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using dashboard_api.Data;
 using dashboard_api.Dtos;
+using dashboard_api.Interfaces;
 using dashboard_api.Models;
 using dashboard_api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +58,7 @@ public class SceneSchedulerBackgroundService(IServiceProvider serviceProvider) :
         await db.SaveChangesAsync();
     }
     
-    private async Task ProcessScene(Scene scene, Instant now, DeviceControllerService deviceController)
+    private async Task ProcessScene(Scene scene, Instant now, IDeviceControllerService deviceController)
     {
         if (scene.TriggerAt > now)
             return;

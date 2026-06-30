@@ -9,17 +9,20 @@ public class HomeAssistantConfigurationService(SmartHomeDbContext context) : IHo
 {
     public async Task<HomeAssistantConfiguration> GetConfigurationAsync()
     {
-        var settings = await context.Settings.FirstAsync();
+        var settings = await context.Settings.FirstOrDefaultAsync();
+
+        if (settings == null)
+            throw new InvalidOperationException(
+                "No Home Assistant configuration found.");
 
         return new HomeAssistantConfiguration
         {
             Url = settings.HomeAssistantUrl,
             Token = settings.HomeAssistantToken,
-
             WebSocketUrl = settings.HomeAssistantUrl
                 .Replace("http://", "ws://")
-                .Replace("https://", "ws://") 
-                           + "/api/websocket"
+                .Replace("https://", "wss://")
+                + "/api/websocket"
         };
     }
 }

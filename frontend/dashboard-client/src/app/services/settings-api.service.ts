@@ -6,7 +6,7 @@ import {Settings} from '../models/settings.model';
   providedIn: 'root',
 })
 export class SettingsApiService {
-  private baseUrl = 'http://localhost:5001/api/Settings';
+  private baseUrl = 'http://192.168.2.26:5001/api/Settings';
   private http = inject(HttpClient);
 
   getSettings() {

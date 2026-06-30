@@ -4,7 +4,7 @@ using dashboard_api.Services;
 
 namespace dashboard_api.Handlers;
 
-public class LightHandler(HomeAssistantRestService restService) : IDeviceDomainHandler
+public class LightHandler(IHomeAssistantRestService restService) : IDeviceDomainHandler
 {
     public string Domain => "light";
     
